@@ -1,0 +1,78 @@
+# Install nltk and scikit-learn libraries
+!pip install nltk scikit-learn
+
+# import libraries and use modules
+import nltk
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import Pipeline
+from sklearn import metrics
+
+# Train_data
+data = {
+    'text': [
+        'How do I install Python?',
+        'You should try restarting your computer.',
+        'Python is a great programming language.',
+        'Can you help me with my homework?',
+        'I recommend taking the train instead of driving.',
+        'The weather is sunny today.',
+        'What time does the library close today?',
+        'How do I reset my laptop to factory settings?',
+        'Where is the nearest coffee shop around here?',
+        'Can you explain the concept of quantum computing?',
+        'Why did the stock market drop so sharply yesterday?',
+        'What is the capital of France?',
+        'The sun sets earlier in the winter months.',
+        'Python is a versatile programming language.',
+        'The company reported higher earnings this quarter.',
+        'The garden is in full bloom during the spring.',
+        'She enjoys reading mystery novels in her free time.',
+        'Its a good idea to save a portion of your income each month for unexpected expenses.',
+        'When feeling overwhelmed, try breaking tasks into smaller, manageable steps.',
+        'Drinking plenty of water throughout the day can help maintain your energy levels.',
+        'Regular exercise is beneficial for both your physical health and mental well-being.',
+        'Consider reading the instructions thoroughly before attempting to assemble complex furniture.'
+
+
+
+    ],
+    'intent': ['question', 'advice', 'statement', 'question', 'advice', 'statement','question','question','question','question','question','question','statement','statement','statement','statement','statement','advice','advice','advice','advice','advice']
+}
+
+# Create as a DataFrame
+df = pd.DataFrame(data)
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(df['text'], df['intent'], test_size=0.2, random_state=42)
+
+# Creates pipeline for processing text data and applying model
+model = Pipeline([
+    ('vectorizer', TfidfVectorizer()),
+    ('classifier', MultinomialNB())
+])
+
+# Train Model
+model.fit(X_train, y_train)
+
+# Predict
+y_pred = model.predict(X_test)
+
+# Test with example sentence
+#test_sentence = ["Should I bring an umbrella today?"]
+#prediction = model.predict(test_sentence)
+#print("Prediction for ",test_sentence[0],":", prediction[0])
+
+#Test with example sentences (CHANGE TO YOUR OWN LIKING)
+test_sentences = [ "Should I bring an umbrella today?", "It's wise to backup your data regularly.", "Artificial Intelligence is transforming industries.", "What is the best way to learn a new language?", "Exercise regularly for a healthy life.", "Colab is better than pycharm." ]
+
+# Output Predictions
+n = 0
+
+predictions = model.predict(test_sentences)
+for sentence, prediction in zip(test_sentences, predictions):
+    print(" ")
+    n = n+1
+    print("Prediction for", "Sentence",n,".... ",sentence,":","", prediction)
